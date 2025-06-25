@@ -44,6 +44,9 @@ COPY config/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Change the UID and GID of the nobody user
+RUN usermod -u ${UID} nobody && groupmod -o -g ${GID} nobody
+
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
 RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx
 
