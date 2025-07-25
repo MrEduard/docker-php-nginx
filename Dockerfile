@@ -50,9 +50,9 @@ COPY config/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Create www-data user and group with specified UID and GID
-RUN addgroup -g ${GID} -S www-data && \
-    adduser -u ${UID} -D -S -G www-data www-data
+# Modify existing www-data user and group with specified UID and GID
+RUN groupmod -g ${GID} www-data && \
+    usermod -u ${UID} -g ${GID} www-data
 
 # Make sure files/folders needed by the processes are accessable when they run under the www-data user
 RUN chown -R www-data:www-data /var/www/html /run /var/lib/nginx /var/log/nginx
