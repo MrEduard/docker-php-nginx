@@ -2,6 +2,12 @@ ARG ALPINE_VERSION=3.21
 FROM alpine:${ALPINE_VERSION}
 LABEL Maintainer="Tim de Pater <code@trafex.nl>"
 LABEL Description="Lightweight container with Nginx 1.26 & PHP 8.4 based on Alpine Linux."
+
+# Define environment variables for user ID and group ID
+ARG UID=82
+ARG GID=82
+ENV UID=${UID}
+ENV GID=${GID}
 # Setup document root
 WORKDIR /var/www/html
 
@@ -37,24 +43,25 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/conf.d /etc/nginx/conf.d/
 
 # Configure PHP-FPM
-ENV PHP_INI_DIR /etc/php84
+ENV PHP_INI_DIR=/etc/php84
 COPY config/fpm-pool.conf ${PHP_INI_DIR}/php-fpm.d/www.conf
 COPY config/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
 
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Change the UID and GID of the nobody user
-RUN usermod -u ${UID} nobody && groupmod -o -g ${GID} nobody
+# Create www-data user and group with specified UID and GID
+RUN addgroup -g ${GID} -S www-data && \
+    adduser -u ${UID} -D -S -G www-data www-data
 
-# Make sure files/folders needed by the processes are accessable when they run under the nobody user
-RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx
+# Make sure files/folders needed by the processes are accessable when they run under the www-data user
+RUN chown -R www-data:www-data /var/www/html /run /var/lib/nginx /var/log/nginx
 
 # Switch to use a non-root user from here on
-USER nobody
+USER www-data
 
 # Add application
-COPY --chown=nobody src/ /var/www/html/
+COPY --chown=www-data src/ /var/www/html/
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
