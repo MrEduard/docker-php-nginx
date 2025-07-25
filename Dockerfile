@@ -3,11 +3,6 @@ FROM alpine:${ALPINE_VERSION}
 LABEL Maintainer="Tim de Pater <code@trafex.nl>"
 LABEL Description="Lightweight container with Nginx 1.26 & PHP 8.4 based on Alpine Linux."
 
-# Define environment variables for user ID and group ID
-ARG UID=82
-ARG GID=82
-ENV UID=${UID}
-ENV GID=${GID}
 # Setup document root
 WORKDIR /var/www/html
 
@@ -40,7 +35,7 @@ RUN ln -s /usr/bin/php84 /usr/bin/php
 # Configure nginx - http
 COPY config/nginx.conf /etc/nginx/nginx.conf
 # Configure nginx - default server
-# COPY config/conf.d /etc/nginx/conf.d/
+COPY config/conf.d /etc/nginx/conf.d/
 
 # Configure PHP-FPM
 ENV PHP_INI_DIR=/etc/php84
@@ -55,7 +50,7 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN adduser -D -u 1026 --ingroup www-data www-data
 
 # Make sure files/folders needed by the processes are accessable when they run under the www-data user
-RUN chown -R www-data:www-data /var/www/html /run /var/lib/nginx /var/log/nginx
+RUN chown -R www-data /var/www/html /run /var/lib/nginx /var/log/nginx
 
 # Switch to use a non-root user from here on
 USER www-data
