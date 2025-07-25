@@ -63,6 +63,9 @@ USER www-data
 # Add application
 COPY --chown=www-data src/ /var/www/html/
 
+# Install composer from the official image
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
