@@ -40,7 +40,7 @@ RUN ln -s /usr/bin/php84 /usr/bin/php
 # Configure nginx - http
 COPY config/nginx.conf /etc/nginx/nginx.conf
 # Configure nginx - default server
-COPY config/conf.d /etc/nginx/conf.d/
+# COPY config/conf.d /etc/nginx/conf.d/
 
 # Configure PHP-FPM
 ENV PHP_INI_DIR=/etc/php84
