@@ -50,7 +50,7 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN adduser -D -u 1026 --ingroup www-data www-data
 
 # Make sure files/folders needed by the processes are accessable when they run under the www-data user
-RUN chown -R www-data /var/www/html /run /var/lib/nginx /var/log/nginx
+RUN chown -R www-data:www-data /var/www/html /run /var/lib/nginx /var/log/nginx
 
 # Switch to use a non-root user from here on
 USER www-data
