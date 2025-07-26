@@ -22,6 +22,8 @@ RUN apk add --no-cache \
   php84-mysqli \
   php84-opcache \
   php84-openssl \
+  php84-pdo \
+  php84-pdo_sqlite \
   php84-phar \
   php84-session \
   php84-tokenizer \
