@@ -51,17 +51,6 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # We use UID 1026 to match the host user (so volume permissions automatically line up).
 RUN adduser -D -u 1026 --ingroup www-data www-data
 
-# Copy crontab configuration
-COPY config/crontab.txt /tmp/crontab.txt
-RUN crontab -u www-data /tmp/crontab.txt && \
-    rm /tmp/crontab.txt && \
-    chown www-data /etc/crontabs/www-data && \
-    chmod 0644 /etc/crontabs/www-data && \
-    chown www-data:www-data /usr/sbin/crond
-
-# Copy entrypoint script
-COPY --chmod=500 --chown=www-data config/entrypoint.sh /usr/local/bin/entrypoint.sh
-
 # Make sure files/folders needed by the processes are accessable when they run under the www-data user
 RUN chown -R www-data:www-data /var/www/html /run /var/lib/nginx /var/log/nginx
 
@@ -78,7 +67,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 EXPOSE 8080
 
 # Let supervisord start nginx & php-fpm
-CMD ["entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping || exit 1
