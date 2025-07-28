@@ -9,6 +9,7 @@ WORKDIR /var/www/html
 # Install packages and remove default server definition
 RUN apk add --no-cache \
   curl \
+  git \
   nginx \
   php84 \
   php84-ctype \
