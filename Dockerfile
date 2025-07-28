@@ -30,7 +30,8 @@ RUN apk add --no-cache \
   php84-xml \
   php84-xmlreader \
   php84-xmlwriter \
-  supervisor
+  supervisor \
+  tzdata
 
 RUN ln -s /usr/bin/php84 /usr/bin/php
 
