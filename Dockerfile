@@ -25,7 +25,7 @@ RUN apk add --no-cache \
   curl \
   git \
   nginx \
-  php85 \
+  'php85>=8.5.12' \
   php85-ctype \
   php85-curl \
   php85-dom \
